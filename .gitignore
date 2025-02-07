@@ -1,0 +1,11 @@
+# Ignore object files and executables
+*.o
+*.out
+*.exe
+myfind  # Ignore the myfind executable
+
+# Ignore build directories
+build/
+bin/
+obj/
+cmake-build-*/
