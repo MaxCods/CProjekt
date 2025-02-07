@@ -1,10 +1,10 @@
-# Ignore object files and executables
+#Ignore object files and executables
 *.o
 *.out
 *.exe
 myfind  # Ignore the myfind executable
 
-# Ignore build directories
+#Ignore build directories
 build/
 bin/
 obj/
