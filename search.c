@@ -32,15 +32,29 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
         struct stat statbuf;
         if (lstat(full_path, &statbuf) == -1) continue;
 
-        //filter for type if specified
-        if (options->type_filter == 'f' && !S_ISREG(statbuf.st_mode)) continue;
-        if (options->type_filter == 'd' && !S_ISDIR(statbuf.st_mode)) continue;
-        if (options->type_filter == 'l' && !S_ISLNK(statbuf.st_mode)) continue;
-
         //filter for name
         if (options->name_pattern == NULL || strstr(entry->d_name, options->name_pattern)) {
-            printf("%s\n", full_path);
+            //filter for type if specified
+            if (options->type_filter == 'f' && !S_ISREG(statbuf.st_mode)) continue;
+            if (options->type_filter == 'd' && !S_ISDIR(statbuf.st_mode)) continue;
+            if (options->type_filter == 'l' && !S_ISLNK(statbuf.st_mode)) continue;
+
+            //filter for size
+            if (options->size_operator != -1) {
+                int match_size = 0;
+                if (options->size_operator == 0) {
+                    if (statbuf.st_size == options->size_value) match_size = 1;
+                } else if (options->size_operator == 1) {
+                    if (statbuf.st_size > options->size_value) match_size = 1;
+                } else if (options->size_operator == 2) {
+                    if (statbuf.st_size < options->size_value) match_size = 1;
+                }
+
+                if (!match_size) continue;
+            }
+          printf("%s\n", full_path);
         }
+
         //search recursively
         if (S_ISDIR(statbuf.st_mode) && options->recursive) {
             if (options->use_threads) {

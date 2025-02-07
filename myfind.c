@@ -11,6 +11,7 @@ void print_usage(void) {
     fprintf(stderr, "  -a              show hidden files\n");
     fprintf(stderr, "  -t              use multiple threads\n");
     fprintf(stderr, "  -type           filter by file type (f for file, d for dir and l for symbolic links)\n");
+    fprintf(stderr, "  -size SIZE      filter by file size (N for exact size, +N for greater than, -N for less than)\n");
     fprintf(stderr, "  -h              display this help message\n");
 }
 
@@ -20,6 +21,8 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
     options->show_hidden = 0;
     options->use_threads = 0;
     options->type_filter = '\0';
+    options->size_operator = -1;
+    options->size_value = -1;
 
     *start_path = ".";
 
@@ -34,6 +37,18 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
             options->use_threads = 1;
         } else if (strcmp(argv[i], "-type") == 0 && i + 1 < argc) {
             options->type_filter = argv[++i][0];
+        } else if (strcmp(argv[i], "-size") == 0 && i + 1 < argc) {
+            char* size_str = argv[++i];
+            if (size_str[0] == '+') {
+                options->size_operator = 1;
+                options->size_value = atoi(size_str + 1);
+            } else if (size_str[0] == '-') {
+                options->size_operator = 2;
+                options->size_value = atoi(size_str + 1);
+            } else {
+                options->size_operator = 0;
+                options->size_value = atoi(size_str);
+            }
         } else if (strcmp(argv[i], "-h") == 0) {
             print_usage();
             exit(0);

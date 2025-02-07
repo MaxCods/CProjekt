@@ -21,6 +21,8 @@ typedef struct SearchOptions {
     int show_hidden;
     int use_threads;
     char type_filter;
+    int size_operator;   // 0 = exact, 1 = greater, 2 = smaller
+    off_t size_value; //size of bytes
 } SearchOptions;
 
 void print_usage(void);
