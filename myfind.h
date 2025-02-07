@@ -20,9 +20,10 @@ typedef struct SearchOptions {
     int recursive;
     int show_hidden;
     int use_threads;
+    char type_filter;
 } SearchOptions;
 
 void print_usage(void);
-void parse_arguments(int argc, char* argv[], SearchOptions* options);
+void parse_arguments(int argc, char* argv[], SearchOptions* options, const char** start_path);
 
 #endif

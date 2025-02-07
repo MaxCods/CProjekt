@@ -32,10 +32,16 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
         struct stat statbuf;
         if (lstat(full_path, &statbuf) == -1) continue;
 
+        //filter for type if specified
+        if (options->type_filter == 'f' && !S_ISREG(statbuf.st_mode)) continue;
+        if (options->type_filter == 'd' && !S_ISDIR(statbuf.st_mode)) continue;
+        if (options->type_filter == 'l' && !S_ISLNK(statbuf.st_mode)) continue;
+
+        //filter for name
         if (options->name_pattern == NULL || strstr(entry->d_name, options->name_pattern)) {
             printf("%s\n", full_path);
         }
-
+        //search recursively
         if (S_ISDIR(statbuf.st_mode) && options->recursive) {
             if (options->use_threads) {
                 enqueue(queue, full_path);
