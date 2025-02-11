@@ -12,6 +12,7 @@ void print_usage(void) {
     fprintf(stderr, "  -t              use multiple threads\n");
     fprintf(stderr, "  -type           filter by file type (f for file, d for dir and l for symbolic links)\n");
     fprintf(stderr, "  -size SIZE      filter by file size (N for exact size, +N for greater than, -N for less than)\n");
+    fprintf(stderr, "  -mtime DAYS     filter by last modification time (N for exact, +N for older, -N for newer)\n");
     fprintf(stderr, "  -h              display this help message\n");
 }
 
@@ -21,10 +22,12 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
     options->show_hidden = 0;
     options->use_threads = 0;
     options->type_filter = '\0';
-    options->size_operator = -1;
+    options->size_operator = -1; // -1 = don't used as default value
     options->size_value = -1;
+    options->mtime_operator = -1;
+    options->mtime_value = -1;
 
-    *start_path = ".";
+    *start_path = "."; // current path as default
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-name") == 0 && i + 1 < argc) {
@@ -48,6 +51,18 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
             } else {
                 options->size_operator = 0;
                 options->size_value = atoi(size_str);
+            }
+        } else if (strcmp(argv[i], "-mtime") == 0 && i + 1 < argc) {
+            char* mtime_str = argv[++i];
+            if (mtime_str[0] == '+') {
+                options->mtime_operator = 1;
+                options->mtime_value = atoi(mtime_str + 1);
+            } else if (mtime_str[0] == '-') {
+                options->mtime_operator = 2;
+                options->mtime_value = atoi(mtime_str + 1);
+            } else {
+                options->mtime_operator = 0;
+                options->mtime_value = atoi(mtime_str);
             }
         } else if (strcmp(argv[i], "-h") == 0) {
             print_usage();

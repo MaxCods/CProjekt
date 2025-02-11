@@ -23,6 +23,8 @@ typedef struct SearchOptions {
     char type_filter;
     int size_operator;   // 0 = exact, 1 = greater, 2 = smaller
     off_t size_value; //size of bytes
+    int mtime_operator;  // 0 = exact, 1 = greater, 2 = smaller
+    int mtime_value;  // days old
 } SearchOptions;
 
 void print_usage(void);

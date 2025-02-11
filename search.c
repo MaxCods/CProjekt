@@ -52,6 +52,24 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
 
                 if (!match_size) continue;
             }
+            //filter for time
+            if (options->mtime_value != -1) {
+                time_t now = time(NULL);
+                int days_old = (now - statbuf.st_mtime) / (60 * 60 * 24); // convert seconds to days
+
+                int match_mtime = 0;
+                if (options->mtime_operator == 0) {
+                    if (days_old == options->mtime_value) match_mtime = 1; // exact n days
+                } else if (options->mtime_operator == 1) {
+                    if (days_old > options->mtime_value) match_mtime = 1; // more than n days
+                } else if (options->mtime_operator == 2) {
+                    if (days_old < options->mtime_value) match_mtime = 1; // less than n days
+                }
+
+                if (!match_mtime) continue;
+            }
+
+          // if none match
           printf("%s\n", full_path);
         }
 
