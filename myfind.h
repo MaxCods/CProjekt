@@ -20,9 +20,15 @@ typedef struct SearchOptions {
     int recursive;
     int show_hidden;
     int use_threads;
+    char type_filter;
+    int size_operator;   // 0 = exact, 1 = greater, 2 = smaller
+    off_t size_value; //size of bytes
+    int mtime_operator;  // 0 = exact, 1 = greater, 2 = smaller
+    int mtime_value;  // days old
+    mode_t perm_mask; //permissions filter
 } SearchOptions;
 
 void print_usage(void);
-void parse_arguments(int argc, char* argv[], SearchOptions* options);
+void parse_arguments(int argc, char* argv[], SearchOptions* options, const char** start_path);
 
 #endif
