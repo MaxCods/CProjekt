@@ -16,6 +16,7 @@ void print_usage(void) {
     fprintf(stderr, "  -mtime DAYS     filter by last modification time (N for exact, +N for older, -N for newer)\n");
     fprintf(stderr, "  -perm MODE      filter by file permissions (e.g., rwxrwxrwx)\n");
     fprintf(stderr, "  -l              show detailed information about the matching files (permissions, owner, size, etc.)\n");
+    fprintf(stderr, "  -o FILE         output the results to the specified FILE\n");
     fprintf(stderr, "  -h              display this help message\n");
 }
 
@@ -33,10 +34,12 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
     options->mtime_value = -1;
     options->perm_mask = 0;  // Initialize permission mask to 0
     options->show_details = 0;
+    options->output_file = NULL;
 
     *start_path = "."; // current path as default
 
     for (int i = 1; i < argc; i++) {
+        //checks which option should be applied
         if (strcmp(argv[i], "-name") == 0 && i + 1 < argc) {
             options->name_pattern = argv[++i];
         } else if (strcmp(argv[i], "-R") == 0 || strcmp(argv[i], "-r") == 0) {
@@ -78,15 +81,15 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
 
             // Check for the '/' operator (at least these permissions)
             if (perm_str[0] == '/') {
-                // Skip the '/' and treat the rest as permissions to match
                 perm_str++;
                 set_permissions(perm_str, &options->perm_mask);
             } else {
-                // If there's no '/', treat it as an exact permission match
                 set_permissions(perm_str, &options->perm_mask);
             }
         } else if (strcmp(argv[i], "-l") == 0) {
             options->show_details = 1;
+        } else if (strcmp(argv[i], "-o") == 0 && i + 1 < argc) {
+            options->output_file = argv[++i];
         } else if (strcmp(argv[i], "-h") == 0) {
             print_usage();
             exit(0);

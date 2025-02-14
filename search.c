@@ -18,6 +18,21 @@ void* search_worker(void* arg) {
     return NULL;
 }
 
+void print_results(const char* result, const SearchOptions* options) {
+    printf("%s\n", result);
+
+    if (options->output_file) {
+        FILE* file = fopen(options->output_file, "a");
+        if (file) {
+            fprintf(file, "%s\n", result);
+            fclose(file);
+        } else {
+            perror("error while opening the file");
+        }
+    } else{
+        printf("%s\n", result);
+    }
+}
 void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQueue* queue) {
     DIR* dir = opendir(dir_path);
     if (!dir) return;
@@ -82,7 +97,7 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
             }
 
             // If all filters passed, print the file path
-            printf("%s\n", full_path);
+            print_results(full_path, options);
         }
 
         // Search recursively if it's a directory
