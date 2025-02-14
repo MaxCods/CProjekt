@@ -11,6 +11,17 @@ void init_queue(ThreadSafeQueue* queue) {
 
 void enqueue(ThreadSafeQueue* queue, const char* path) {
     QueueNode* new_node = malloc(sizeof(QueueNode));
+    if (!new_node) {
+        fprintf(stderr, "Memory allocation failed for new node\n");
+        return;
+    }
+    new_node->path = strdup(path);
+
+    if (!new_node->path) {
+        fprintf(stderr, "Memory allocation failed for path string\n");
+        free(new_node);
+        return;
+    }
     new_node->path = strdup(path);
     new_node->next = NULL;
 

@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pthread
 LDFLAGS = -pthread
-SOURCES = myfind.c queue.c search.c
+SOURCES = myfind.c queue.c search.c library.c
 OBJECTS = $(SOURCES:.c=.o)
 TARGET = myfind
 
@@ -10,7 +10,7 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
 
-%.o: %.c myfind.h queue.h search.h
+%.o: %.c myfind.h queue.h search.h library.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
