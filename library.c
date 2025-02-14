@@ -25,6 +25,18 @@ int check_permissions(mode_t st_mode, int perm_mask) {
     return 1; // All checks passed, return 1 (match)
 }
 
+void set_permissions(const char* perm_str, mode_t* perm_mask) {
+    if (perm_str[0] == 'r') *perm_mask |= S_IRUSR;
+    if (perm_str[1] == 'w') *perm_mask |= S_IWUSR;
+    if (perm_str[2] == 'x') *perm_mask |= S_IXUSR;
+    if (perm_str[3] == 'r') *perm_mask |= S_IRGRP;
+    if (perm_str[4] == 'w') *perm_mask |= S_IWGRP;
+    if (perm_str[5] == 'x') *perm_mask |= S_IXGRP;
+    if (perm_str[6] == 'r') *perm_mask |= S_IROTH;
+    if (perm_str[7] == 'w') *perm_mask |= S_IWOTH;
+    if (perm_str[8] == 'x') *perm_mask |= S_IXOTH;
+}
+
 void print_file_details(const char* path, struct stat* statbuf) {
     // Mostrar permisos
     char perms[11];
