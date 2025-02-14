@@ -2,6 +2,7 @@
 #include "myfind.h"
 #include "queue.h"
 #include "search.h"
+#include "library.h"
 
 void print_usage(void) {
     fprintf(stderr, "Usage: myfind [options] [path...] [expression]\n");
@@ -14,20 +15,11 @@ void print_usage(void) {
     fprintf(stderr, "  -size SIZE      filter by file size (N for exact size, +N for greater than, -N for less than)\n");
     fprintf(stderr, "  -mtime DAYS     filter by last modification time (N for exact, +N for older, -N for newer)\n");
     fprintf(stderr, "  -perm MODE      filter by file permissions (e.g., rwxrwxrwx)\n");
+    fprintf(stderr, "  -l              show detailed information about the matching files (permissions, owner, size, etc.)\n");
     fprintf(stderr, "  -h              display this help message\n");
 }
 
-void set_permissions(const char* perm_str, mode_t* perm_mask) {
-    if (perm_str[0] == 'r') *perm_mask |= S_IRUSR;
-    if (perm_str[1] == 'w') *perm_mask |= S_IWUSR;
-    if (perm_str[2] == 'x') *perm_mask |= S_IXUSR;
-    if (perm_str[3] == 'r') *perm_mask |= S_IRGRP;
-    if (perm_str[4] == 'w') *perm_mask |= S_IWGRP;
-    if (perm_str[5] == 'x') *perm_mask |= S_IXGRP;
-    if (perm_str[6] == 'r') *perm_mask |= S_IROTH;
-    if (perm_str[7] == 'w') *perm_mask |= S_IWOTH;
-    if (perm_str[8] == 'x') *perm_mask |= S_IXOTH;
-}
+
 
 void parse_arguments(int argc, char* argv[], SearchOptions* options, const char** start_path) {
     options->name_pattern = NULL;
@@ -40,6 +32,7 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
     options->mtime_operator = -1;
     options->mtime_value = -1;
     options->perm_mask = 0;  // Initialize permission mask to 0
+    options->show_details = 0;
 
     *start_path = "."; // current path as default
 
@@ -92,6 +85,8 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
                 // If there's no '/', treat it as an exact permission match
                 set_permissions(perm_str, &options->perm_mask);
             }
+        } else if (strcmp(argv[i], "-l") == 0) {
+            options->show_details = 1;
         } else if (strcmp(argv[i], "-h") == 0) {
             print_usage();
             exit(0);

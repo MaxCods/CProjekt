@@ -35,14 +35,14 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
         struct stat statbuf;
         if (lstat(full_path, &statbuf) == -1) continue;
 
-        //filter for name
+        // filter for name
         if (options->name_pattern == NULL || strstr(entry->d_name, options->name_pattern)) {
-            //filter for type if specified
+            // filter for type if specified
             if (options->type_filter == 'f' && !S_ISREG(statbuf.st_mode)) continue;
             if (options->type_filter == 'd' && !S_ISDIR(statbuf.st_mode)) continue;
             if (options->type_filter == 'l' && !S_ISLNK(statbuf.st_mode)) continue;
 
-            //filter for size
+            // filter for size
             if (options->size_operator != -1) {
                 int match_size = 0;
                 if (options->size_operator == 0) {
@@ -55,7 +55,8 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
 
                 if (!match_size) continue;
             }
-            //filter for time
+
+            // filter for time
             if (options->mtime_value != -1) {
                 time_t now = time(NULL);
                 int days_old = (now - statbuf.st_mtime) / (60 * 60 * 24); // convert seconds to days
@@ -75,11 +76,16 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
             // Filter by permissions if specified
             if (options->perm_mask != 0 && !check_permissions(statbuf.st_mode, options->perm_mask)) continue;
 
-          // if none match
-          printf("%s\n", full_path);
+            // If -l option is enabled, show detailed information
+            if (options->show_details) {
+                print_file_details(full_path, &statbuf);
+            }
+
+            // If all filters passed, print the file path
+            printf("%s\n", full_path);
         }
 
-        //search recursively
+        // Search recursively if it's a directory
         if (S_ISDIR(statbuf.st_mode) && options->recursive) {
             if (options->use_threads) {
                 enqueue(queue, full_path);

@@ -26,6 +26,7 @@ typedef struct SearchOptions {
     int mtime_operator;  // 0 = exact, 1 = greater, 2 = smaller
     int mtime_value;  // days old
     mode_t perm_mask; //permissions filter
+    int show_details;
 } SearchOptions;
 
 void print_usage(void);
