@@ -14,6 +14,7 @@ void print_usage(void) {
     fprintf(stderr, "  -size SIZE      filter by file size (N for exact size, +N for greater than, -N for less than)\n");
     fprintf(stderr, "  -mtime DAYS     filter by last modification time (N for exact, +N for older, -N for newer)\n");
     fprintf(stderr, "  -perm MODE      filter by file permissions (e.g., rwxrwxrwx)\n");
+    fprintf(stderr, "  -l              show detailed information about the matching files (permissions, owner, size, etc.)\n");
     fprintf(stderr, "  -h              display this help message\n");
 }
 
@@ -40,6 +41,7 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
     options->mtime_operator = -1;
     options->mtime_value = -1;
     options->perm_mask = 0;  // Initialize permission mask to 0
+    options->show_details = 0;
 
     *start_path = "."; // current path as default
 
@@ -92,6 +94,8 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
                 // If there's no '/', treat it as an exact permission match
                 set_permissions(perm_str, &options->perm_mask);
             }
+        } else if (strcmp(argv[i], "-l") == 0) {
+            options->show_details = 1;
         } else if (strcmp(argv[i], "-h") == 0) {
             print_usage();
             exit(0);
