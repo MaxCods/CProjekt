@@ -74,7 +74,7 @@ Example with recursive search:
 For help on available options:
 
 ```bash
-`./myfind -h`
+./myfind -h
 ```
 
 ## 🛠 Running Test Cases
