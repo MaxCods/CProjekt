@@ -40,7 +40,7 @@ void set_permissions(const char* perms, mode_t *perm_mask) {
 }
 
 void print_file_details(const char* path, struct stat* statbuf) {
-    // Mostrar permisos
+
     char perms[11];
     snprintf(perms, sizeof(perms), "%c%c%c%c%c%c%c%c%c%c",
              (S_ISDIR(statbuf->st_mode)) ? 'd' : '-',
