@@ -56,27 +56,21 @@ void print_file_details(const char* path, struct stat* statbuf) {
 
     printf("%s ", perms);
 
-    // Mostrar número de enlaces
-    printf("%lu ", statbuf->st_nlink);
+    printf("%hu ", statbuf->st_nlink);
 
-    // Mostrar propietario
     struct passwd *pw = getpwuid(statbuf->st_uid);
     printf("%s ", pw ? pw->pw_name : "unknown");
 
-    // Mostrar grupo
     struct group *gr = getgrgid(statbuf->st_gid);
     printf("%s ", gr ? gr->gr_name : "unknown");
 
-    // Mostrar tamaño
-    printf("%ld ", statbuf->st_size);
+    printf("%lld ", statbuf->st_size);
 
-    // Mostrar fecha de última modificación
     char timebuf[80];
     struct tm *tm_info = localtime(&statbuf->st_mtime);
     strftime(timebuf, sizeof(timebuf), "%b %d %H:%M", tm_info);
     printf("%s ", timebuf);
 
-    // Mostrar el nombre del archivo
     printf("%s\n", path);
 }
 
