@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
+#include "library.h"
 
 // Function to check if the permissions match the given mask
 int check_permissions(mode_t st_mode, int perm_mask) {
@@ -25,16 +26,17 @@ int check_permissions(mode_t st_mode, int perm_mask) {
     return 1; // All checks passed, return 1 (match)
 }
 
-void set_permissions(const char* perm_str, mode_t* perm_mask) {
-    if (perm_str[0] == 'r') *perm_mask |= S_IRUSR;
-    if (perm_str[1] == 'w') *perm_mask |= S_IWUSR;
-    if (perm_str[2] == 'x') *perm_mask |= S_IXUSR;
-    if (perm_str[3] == 'r') *perm_mask |= S_IRGRP;
-    if (perm_str[4] == 'w') *perm_mask |= S_IWGRP;
-    if (perm_str[5] == 'x') *perm_mask |= S_IXGRP;
-    if (perm_str[6] == 'r') *perm_mask |= S_IROTH;
-    if (perm_str[7] == 'w') *perm_mask |= S_IWOTH;
-    if (perm_str[8] == 'x') *perm_mask |= S_IXOTH;
+void set_permissions(const char* perms, mode_t *perm_mask) {
+    *perm_mask = 0;
+    if (perms[0] == 'r') *perm_mask |= S_IRUSR;
+    if (perms[1] == 'w') *perm_mask |= S_IWUSR;
+    if (perms[2] == 'x') *perm_mask |= S_IXUSR;
+    if (perms[3] == 'r') *perm_mask |= S_IRGRP;
+    if (perms[4] == 'w') *perm_mask |= S_IWGRP;
+    if (perms[5] == 'x') *perm_mask |= S_IXGRP;
+    if (perms[6] == 'r') *perm_mask |= S_IROTH;
+    if (perms[7] == 'w') *perm_mask |= S_IWOTH;
+    if (perms[8] == 'x') *perm_mask |= S_IXOTH;
 }
 
 void print_file_details(const char* path, struct stat* statbuf) {
@@ -54,26 +56,21 @@ void print_file_details(const char* path, struct stat* statbuf) {
 
     printf("%s ", perms);
 
-    // Mostrar número de enlaces
-    printf("%lu ", statbuf->st_nlink);
+    printf("%hu ", statbuf->st_nlink);
 
-    // Mostrar propietario
     struct passwd *pw = getpwuid(statbuf->st_uid);
     printf("%s ", pw ? pw->pw_name : "unknown");
 
-    // Mostrar grupo
     struct group *gr = getgrgid(statbuf->st_gid);
     printf("%s ", gr ? gr->gr_name : "unknown");
 
-    // Mostrar tamaño
-    printf("%ld ", statbuf->st_size);
+    printf("%lld ", statbuf->st_size);
 
-    // Mostrar fecha de última modificación
     char timebuf[80];
     struct tm *tm_info = localtime(&statbuf->st_mtime);
     strftime(timebuf, sizeof(timebuf), "%b %d %H:%M", tm_info);
     printf("%s ", timebuf);
 
-    // Mostrar el nombre del archivo
     printf("%s\n", path);
 }
+
