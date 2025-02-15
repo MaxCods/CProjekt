@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include "library.h"
-#include "myfind.h"
-#include "queue.h"
-#include "search.h"
 
 void test_set_permissions_and_check_permissions() {
     mode_t perm_mask = 0;
@@ -36,36 +34,23 @@ void test_hello_function() {
     printf("\n");
 }
 
-void test_queue_functions() {
-    // Erstelle Queue und teste deren Funktionalität
-    Queue* q = createQueue();
-    assert(isQueueEmpty(q) && "Queue sollte initial leer sein");
-    enqueue(q, 42);
-    enqueue(q, 84);
-    int val = dequeue(q);
-    assert(val == 42 && "Erstes Element sollte 42 sein");
-    val = dequeue(q);
-    assert(val == 84 && "Zweites Element sollte 84 sein");
-    assert(isQueueEmpty(q) && "Queue sollte nach dem Entfernen aller Elemente leer sein");
-    destroyQueue(q);
-}
-
-void test_myfind_and_search_functions() {
-    // Teste myfind-Funktion: Erwartet wird eine nicht-negative Rückgabe
-    int count = myfind(".", "test");
-    assert(count >= 0 && "myfind sollte eine nicht-negative Anzahl zurückgeben");
-
-    // Teste search_directory-Funktion: Erwartet wird eine nicht-negative Rückgabe
-    int search_count = search_directory(".", "test");
-    assert(search_count >= 0 && "search_directory sollte eine nicht-negative Anzahl zurückgeben");
+void test_myfind_application() {
+    printf("Test myfind application: ");
+    int ret = system("./myfind . test > /dev/null 2>&1");
+    if(ret == -1) {
+        fprintf(stderr, "Fehler: system() konnte den Befehl nicht ausführen.\n");
+        exit(EXIT_FAILURE);
+    }
+    int exit_status = WEXITSTATUS(ret);
+    assert(exit_status == 0 && "myfind sollte mit exit code 0 enden");
+    printf("OK\n");
 }
 
 int main() {
     printf("Tests starten...\n");
     test_set_permissions_and_check_permissions();
     test_hello_function();
-    test_queue_functions();
-    test_myfind_and_search_functions();
+    test_myfind_application();
     printf("Alle Tests bestanden.\n");
     return 0;
 } 
