@@ -77,3 +77,8 @@ void print_file_details(const char* path, struct stat* statbuf) {
     // Mostrar el nombre del archivo
     printf("%s\n", path);
 }
+
+// Hinzugefügte Implementation der hello-Funktion
+void hello(void) {
+    printf("Hello, World!\n");
+}

@@ -13,7 +13,14 @@ $(TARGET): $(OBJECTS)
 %.o: %.c myfind.h queue.h search.h library.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -f $(OBJECTS) $(TARGET)
+# Neuer Target: Test
+test: test_library
+	./test_library
 
-.PHONY: all clean
+test_library: test_library.c library.c
+	$(CC) $(CFLAGS) test_library.c library.c -o test_library $(LDFLAGS)
+
+clean:
+	rm -f $(OBJECTS) $(TARGET) test_library
+
+.PHONY: all clean test

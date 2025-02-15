@@ -10,3 +10,8 @@ add_library(Projekt STATIC library.c
         search.h
         queue.c
         search.c)
+
+# Hinzufügen der Test-Applikation
+add_executable(test_library test_library.c library.c)
+enable_testing()
+add_test(NAME test_library COMMAND test_library)
