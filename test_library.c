@@ -12,7 +12,7 @@ void test_set_permissions_and_check_permissions() {
     set_permissions(perms, &perm_mask);
     
     // Erstelle ein st_mode, das alle in perm_mask geforderten Bits besitzt
-    mode_t full_mode = S_IRUSR | S_IWUSR | S_IXUSR |
+    mode_t full_mode = S_IRUSR | S_IWUSR | S_IXUSR |   //rwx jeweils 
                        S_IRGRP | S_IWGRP | S_IXGRP |
                        S_IROTH | S_IWOTH | S_IXOTH;
     
