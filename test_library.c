@@ -27,12 +27,6 @@ void test_set_permissions_and_check_permissions() {
     assert(result == 0 && "Test: Fehlende Benutzerleseberechtigung muss zum Fehlschlag führen");
 }
 
-void test_hello_function() {
-    // Einfache Ausgabe, die manuell verifiziert werden kann
-    printf("Test hello function: ");
-    hello();
-    printf("\n");
-}
 
 void test_myfind_application() {
     printf("Test myfind application: ");
@@ -49,7 +43,6 @@ void test_myfind_application() {
 int main() {
     printf("Tests starten...\n");
     test_set_permissions_and_check_permissions();
-    test_hello_function();
     test_myfind_application();
     printf("Alle Tests bestanden.\n");
     return 0;

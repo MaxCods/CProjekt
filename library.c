@@ -80,7 +80,3 @@ void print_file_details(const char* path, struct stat* statbuf) {
     printf("%s\n", path);
 }
 
-// Hinzugefügte Implementation der hello-Funktion
-void hello(void) {
-    printf("Hallo Welt\n");
-}
