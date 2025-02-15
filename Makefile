@@ -13,14 +13,14 @@ $(TARGET): $(OBJECTS)
 %.o: %.c myfind.h queue.h search.h library.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Neuer Target: Test
-test: test_library
-	./test_library
+# Neuer Target: Test-Executable
+test: test_executable
+	./test_executable
 
-test_library: test_library.c library.c
-	$(CC) $(CFLAGS) test_library.c library.c -o test_library $(LDFLAGS)
+test_executable: test_library.c library.c
+	$(CC) $(CFLAGS) test_library.c library.c -o test_executable $(LDFLAGS)
 
 clean:
-	rm -f $(OBJECTS) $(TARGET) test_library
+	rm -f $(OBJECTS) $(TARGET) test_executable
 
 .PHONY: all clean test
