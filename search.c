@@ -20,7 +20,7 @@ void* search_worker(void* arg) {
 }
 
 void print_results(const char* result, const SearchOptions* options) {
-    printf("%s\n", result);
+
 
     if (options->output_file) {
         FILE* file = fopen(options->output_file, "a");
