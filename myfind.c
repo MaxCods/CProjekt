@@ -93,7 +93,11 @@ void parse_arguments(int argc, char* argv[], SearchOptions* options, const char*
         } else if (strcmp(argv[i], "-h") == 0) {
             print_usage();
             exit(0);
-        } else if (argv[i][0] != '-')
+        }
+        else if (strcmp(argv[i], "-help") == 0) {
+            print_usage();
+            exit(0);
+        }else if (argv[i][0] != '-')
         {
             //if not an option, pass a path to a directory
             *start_path = argv[i];

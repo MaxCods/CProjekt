@@ -61,15 +61,40 @@ This will generate the executable file myfind in the project directory.
 
 Once compiled, myfind can be executed as follows:
 
+search exact name 
+```bash
+./myfind -name beispiel.txt
+```
+
+search with name pattern:
 ```bash
 ./myfind -name "*.txt"
 ```
 
-Example with recursive search:
+Example with recursive search with name pattern:
 
 ```bash
-./myfind -R -name "*.c"
+./myfind -R -name "*findme*"
 ```
+
+Example with output to a file:
+```bash
+./myfind -r -o output.txt
+```
+
+Example for searching only directories:
+```bash
+./myfind -type d
+```
+
+Example for searching only files:
+```bash 
+./myfind -type f
+```
+Example for searching with more information:
+```bash
+./myfind -l
+``` 
 
 For help on available options:
 
