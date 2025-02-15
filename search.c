@@ -1,6 +1,7 @@
 // search.c
 #include "search.h"
 #include "library.h"
+#include <fnmatch.h>
 
 void* search_worker(void* arg) {
     ThreadContext* context = (ThreadContext*)arg;
@@ -51,7 +52,7 @@ void process_directory(const char* dir_path, SearchOptions* options, ThreadSafeQ
         if (lstat(full_path, &statbuf) == -1) continue;
 
         // filter for name
-        if (options->name_pattern == NULL || strstr(entry->d_name, options->name_pattern)) {
+        if (options->name_pattern == NULL || fnmatch(options->name_pattern, entry->d_name, 0) == 0) {
             // filter for type if specified
             if (options->type_filter == 'f' && !S_ISREG(statbuf.st_mode)) continue;
             if (options->type_filter == 'd' && !S_ISDIR(statbuf.st_mode)) continue;

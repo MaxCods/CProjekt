@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -pthread -std=c99
+CFLAGS = -Wall -Wextra -pthread -std=c99 -Wno-deprecated-declarations
 LDFLAGS = -pthread
 SOURCES = myfind.c queue.c search.c library.c
 OBJECTS = $(SOURCES:.c=.o)
